@@ -2,15 +2,13 @@ package models
 
 import "gorm.io/gorm"
 
-type TaskType int
-type TaskState int
-type TaskCategory int
-
+type TaskType string
 const (
-	SimpleTask TaskType = iota
-	ProjectTask
+	SimpleTask TaskType = "simple task"
+	ProjectTask TaskType = "project"
 )
 
+type TaskState int
 const (
 	Inbox TaskState = iota
 	Timer
@@ -20,12 +18,6 @@ const (
 	Archived
 )
 
-const (
-	Job TaskCategory = iota
-	UBO
-	Education
-	Leisure
-)
 
 type Task struct {
 	gorm.Model
@@ -33,7 +25,7 @@ type Task struct {
 	Description string
 	Type        TaskType
 	State       TaskState
-	Category    TaskCategory
+	Category    []string
 	UserID      uint
 	SubTasks    []Task `gorm:"foreignKey:ParentTaskID"`
 	ParentTask  *Task  `gorm:"foreignKey:ParentTaskID"`
