@@ -1,14 +1,20 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type TaskType string
+
 const (
-	SimpleTask TaskType = "simple task"
+	SimpleTask  TaskType = "simple task"
 	ProjectTask TaskType = "project"
 )
 
 type TaskState int
+
 const (
 	Inbox TaskState = iota
 	Reminder
@@ -19,14 +25,14 @@ const (
 )
 
 type Task struct {
-    gorm.Model
-    Title         string
-    Description   string
-    Type          TaskType
-    State         TaskState
-    UserID        uint
-    SubTasks      []Task `gorm:"foreignKey:ParentTaskID"`
-    ParentTask    *Task  `gorm:"foreignKey:ParentTaskID"`
-    ReminderDate  *time.Time
-    Category	  []string
+	gorm.Model
+	Title        string `gorm:"not null"`
+	Description  string
+	UserID       uint
+	ParentID     uint
+	SubTasks     []Task `gorm:"foreignKey:ParentID"`
+	Type         TaskType
+	State        TaskState
+	Categories   []Category `gorm:"many2many:task_categories;"`
+	ReminderDate *time.Time
 }
