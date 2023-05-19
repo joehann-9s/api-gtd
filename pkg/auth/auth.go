@@ -1,0 +1,87 @@
+package auth
+
+import (
+	"encoding/json"
+	"net/http"
+
+	"github.com/go-chi/render"
+	"github.com/joehann-9s/api-gtd/api/models"
+	"github.com/joehann-9s/api-gtd/pkg/db"
+	"golang.org/x/crypto/bcrypt"
+)
+
+func RegisterUser(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	json.NewDecoder(r.Body).Decode(&user)
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	user.Password = string(hashedPassword)
+
+	createdUser := db.DB.Create(&user)
+	err := createdUser.Error
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+	}
+
+	response := struct {
+		Message string `json:"message"`
+	}{
+		Message: "User registered successfully",
+	}
+
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	w.Write(responseJSON)
+	//json.NewEncoder(w).Encode(&user)
+
+}
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	//found := db.DB.Take(&user.Username)
+	var userDB models.User
+	err := db.DB.Where("username = ?", user.Username).Find(&userDB).Error
+	if err != nil {
+		render.Status(r, http.StatusNotFound)
+		render.JSON(w, r, map[string]string{"message": "User not found"})
+		return
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(user.Password))
+	if err != nil {
+		render.Status(r, http.StatusNotFound)
+		render.JSON(w, r, map[string]string{"message": "Incorrect password, try again"})
+		return
+	}
+
+	token, err := GenerateToken(user.Username)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	response := struct {
+		Message string `json:"message"`
+		Token   string `json:"token"`
+	}{
+		Message: "Welcome back, " + userDB.FirstName + "!",
+		Token:   token,
+	}
+
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseJSON)
+
+}

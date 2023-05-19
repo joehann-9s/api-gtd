@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/joehann-9s/api-gtd/pkg/auth"
 )
 
 // Tasks' routes
@@ -15,7 +16,9 @@ func ConfigureTaskRoutes(r *mux.Router) {
 	r.HandleFunc("/tasks", UpdateTaskByID).Methods("PATCH")
 }
 
-// Users' routes
-func ConfigureUserRoutes(r *mux.Router) {
+// Users auth routes
+func ConfigureAuthRoutes(r *mux.Router) {
+	r.HandleFunc("/auth/register", auth.RegisterUser).Methods("POST")
+	r.HandleFunc("/auth/login", auth.LoginUser).Methods("POST")
 
 }

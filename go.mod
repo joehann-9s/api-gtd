@@ -4,8 +4,13 @@ go 1.20
 
 require gorm.io/datatypes v1.2.0
 
+require github.com/ajg/form v1.5.1 // indirect
+
 require (
+	github.com/go-chi/render v1.0.2
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
