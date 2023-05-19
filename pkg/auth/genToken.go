@@ -1,14 +1,16 @@
 package auth
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
-var jwtKey = []byte("clave_secreta_del_token")
-
 func GenerateToken(username string) (string, error) {
+	JWT_SECRET := os.Getenv("JWT_SECRET")
+	jwtKey := []byte(JWT_SECRET)
+
 	claims := jwt.MapClaims{
 		"username": username,
 		"exp":      time.Now().Add(time.Hour * 24).Unix(), // 24 hours
