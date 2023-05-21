@@ -16,12 +16,12 @@ const (
 type TaskState int
 
 const (
-	Inbox TaskState = iota
-	Reminder
-	Hotbed
-	Main
-	Done
-	Archived
+	Inbox    TaskType = "inbox"
+	Reminder TaskType = "reminder"
+	Hotbed   TaskType = "hotbed"
+	Main     TaskType = "main"
+	Done     TaskType = "done"
+	Archived TaskType = "archived"
 )
 
 type Task struct {
@@ -29,10 +29,9 @@ type Task struct {
 	Title        string `gorm:"not null"`
 	Description  string
 	UserID       uint
-	ParentID     uint
-	SubTasks     []Task `gorm:"foreignKey:ParentID"`
 	Type         TaskType
 	State        TaskState
-	Categories   []Category `gorm:"many2many:task_categories;"`
+	Categories   []*Category `gorm:"many2many:task_categories;"`
 	ReminderDate *time.Time
+	SubTasks     []*SubTask `gorm:"foreignkey:ParentID"`
 }

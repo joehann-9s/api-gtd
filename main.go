@@ -13,10 +13,8 @@ func main() {
 	utils.LoadEnv()
 	db.DBConnection()
 
-	/*
-		//migrating DB
-		db.DB.AutoMigrate(models.User{}, models.Task{}, models.Category{})
-	*/
+	//migrating DB
+	//db.DB.AutoMigrate(models.User{}, models.Task{}, models.SubTask{}, models.Category{})
 
 	r := mux.NewRouter()
 
