@@ -12,12 +12,13 @@ import (
 func ConfigureTaskRoutes(r *mux.Router) {
 	r.Handle("/tasks", middleware.AuthMiddleware(http.HandlerFunc(CreateTask))).Methods("POST")
 	r.Handle("/tasks/{id}", middleware.AuthMiddleware(http.HandlerFunc(GetTaskByID))).Methods("GET")
-	r.Handle("/tasks/{id}", middleware.AuthMiddleware(http.HandlerFunc(UpdateTaskByID))).Methods("PATCH")
+	r.Handle("/tasks/{id}", middleware.AuthMiddleware(http.HandlerFunc(UpdateTaskByID))).Methods("PUT")
+	r.Handle("/tasks/{id}", middleware.AuthMiddleware(http.HandlerFunc(DeleteTaskByID))).Methods("DELETE")
+
+	r.Handle("/tasks", middleware.AuthMiddleware(http.HandlerFunc(GetllAllTasks))).Methods("GET")
+	r.HandleFunc("/tasks/{state}", GetTaskByState).Methods("GET")
 	r.Handle("/tasks/", middleware.AuthMiddleware(http.HandlerFunc(DeleteAllTasks))).Methods("DELETE")
 
-	r.HandleFunc("/tasks", GetllAllTasks).Methods("GET")
-	r.HandleFunc("/tasks/{state}", GetTaskByState).Methods("GET")
-	r.HandleFunc("/tasks/{id}", DeleteTaskByID).Methods("DELETE")
 }
 
 // Users auth routes
