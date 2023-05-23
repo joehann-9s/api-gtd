@@ -16,11 +16,11 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
-	createdUser := db.DB.Create(&user)
-	err := createdUser.Error
+	err := db.DB.Create(&user).Error
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, map[string]string{"message": "Failed to register a user"})
+		return
 	}
 
 	response := struct {
@@ -63,7 +63,8 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	token, err := GenerateToken(user.Username, userDB.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		render.Status(r, http.StatusInternalServerError)
+		render.JSON(w, r, map[string]string{"message": "Error generating token"})
 		return
 	}
 	response := struct {
