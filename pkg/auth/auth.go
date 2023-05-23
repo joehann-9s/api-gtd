@@ -24,8 +24,10 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := struct {
+		Success bool   `json:"success"`
 		Message string `json:"message"`
 	}{
+		Success: true,
 		Message: "User registered successfully",
 	}
 
@@ -68,21 +70,16 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response := struct {
+		Success bool   `json:"success"`
 		Message string `json:"message"`
 		Token   string `json:"token"`
 	}{
+		Success: true,
 		Message: "Welcome back, " + userDB.FirstName + "!",
 		Token:   token,
 	}
 
-	responseJSON, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(responseJSON)
-
+	json.NewEncoder(w).Encode(response)
 }

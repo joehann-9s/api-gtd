@@ -43,9 +43,11 @@ func UpdateTaskByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := struct {
-		Message models.Task `json:"message"`
+		Success bool        `json:"success"`
+		Data    models.Task `json:"data"`
 	}{
-		Message: task,
+		Success: true,
+		Data:    task,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

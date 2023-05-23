@@ -21,9 +21,11 @@ func GetllAllTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response := struct {
-		Message []models.Task `json:"message"`
+		Success bool          `json:"success"`
+		Data    []models.Task `json:"data"`
 	}{
-		Message: tasks,
+		Success: true,
+		Data:    tasks,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -24,9 +24,11 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := struct {
+		Success bool   `json:"success"`
 		Message string `json:"message"`
 		TaskID  uint   `json:"task_id"`
 	}{
+		Success: true,
 		Message: "Task created successfully",
 		TaskID:  task.ID,
 	}
