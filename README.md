@@ -1,7 +1,7 @@
 # GTD Task Management REST API  [![Version](https://img.shields.io/badge/Version-1.0-green.svg)](https://github.com/joehann-9s/api-gtd/releases/tag/v1.0) [![Go Version](https://img.shields.io/badge/Go-1.20-blue?logo=go)](https://golang.org/doc/go1.20) [![PostgreSQL Version](https://img.shields.io/badge/PostgreSQL-15-blue?logo=postgresql)](https://www.postgresql.org/docs/15/)
 
 
-![Project slide](assets\slide-gtd.png)
+![Project slide](assets/slide-gtd.png)
 
 A REST API for GTD-based task management, following the principles of David Allen's Getting Things Done (GTD) methodology. This API allows you to manage and organize your tasks using the GTD approach.
 
