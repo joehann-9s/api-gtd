@@ -16,16 +16,18 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
-	createdUser := db.DB.Create(&user)
-	err := createdUser.Error
+	err := db.DB.Create(&user).Error
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, map[string]string{"message": "Failed to register a user"})
+		return
 	}
 
 	response := struct {
+		Success bool   `json:"success"`
 		Message string `json:"message"`
 	}{
+		Success: true,
 		Message: "User registered successfully",
 	}
 
@@ -63,25 +65,21 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	token, err := GenerateToken(user.Username, userDB.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		render.Status(r, http.StatusInternalServerError)
+		render.JSON(w, r, map[string]string{"message": "Error generating token"})
 		return
 	}
 	response := struct {
+		Success bool   `json:"success"`
 		Message string `json:"message"`
 		Token   string `json:"token"`
 	}{
+		Success: true,
 		Message: "Welcome back, " + userDB.FirstName + "!",
 		Token:   token,
 	}
 
-	responseJSON, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(responseJSON)
-
+	json.NewEncoder(w).Encode(response)
 }

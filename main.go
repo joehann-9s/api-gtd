@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/joehann-9s/api-gtd/api/routes"
@@ -11,6 +12,10 @@ import (
 
 func main() {
 	utils.LoadEnv()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "7000"
+	}
 	db.DBConnection()
 
 	//migrating DB
@@ -25,5 +30,5 @@ func main() {
 	routes.ConfigureTaskRoutes(s)
 	routes.ConfigureAuthRoutes(s)
 
-	http.ListenAndServe(":7000", r)
+	http.ListenAndServe(":"+port, r)
 }
