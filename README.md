@@ -44,7 +44,7 @@ A REST API for GTD-based task management, following the principles of David Alle
         ```
 
 # API Documentation
-You can find the API documentation on [postman](https://documenter.getpostman.com).
+You can find the API documentation on [postman](https://documenter.getpostman.com/view/27585203/2s93m612DE).
 
 
 
